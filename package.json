@@ -1,0 +1,40 @@
+{
+  "name": "@aprax/fast-queue",
+  "version": "1.0.0-0",
+  "description": "A queue for Javascript with fast insert at beginning",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "yarn jest --coverage",
+    "build": "tsc",
+    "lint": "yarn prettier --write . && yarn eslint src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aprax/fast-queue.git"
+  },
+  "keywords": [
+    "queue",
+    "javascript"
+  ],
+  "author": "Adam Prax",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aprax/fast-queue/issues"
+  },
+  "homepage": "https://github.com/aprax/fast-queue#readme",
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.29",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "^8.14.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.1.5",
+    "jest": "^27.0.0",
+    "prettier": "^2.6.2",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
+    "typescript": "4.6.4"
+  }
+}
