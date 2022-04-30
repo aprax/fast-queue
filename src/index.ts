@@ -1,4 +1,4 @@
-import type Args from "./types/Args";
+/* eslint-disable require-jsdoc */
 export interface Prototype {
   enqueue: typeof FastQueue.prototype.enqueue;
   dequeue: typeof FastQueue.prototype.dequeue;
@@ -13,7 +13,7 @@ export interface Prototype {
  *
  * @return {string}
  */
-const formatValue = (character: string, ansiColorCode?: number) =>
+const formatValue = (character: string, ansiColorCode?: number): string =>
   ansiColorCode
     ? `\x01\x1b[${ansiColorCode}m${character.trim()}\x1b[39m\x02`
     : character.trim();
@@ -23,89 +23,93 @@ const formatValue = (character: string, ansiColorCode?: number) =>
  * @example
  *  const myQueue = new FastQueue();
  */
-function FastQueue(this: Args) {
-  this.queue = [];
-  this.sPtr = 0;
-  this.offset = undefined;
-  this.newStart = undefined;
-}
 
-FastQueue.prototype.enqueue = function (this: Args, value: Object) {
-  if (this.offset) {
-    if (this.offset === this.sPtr) {
-      if (!this.newStart) {
-        this.newStart = this.queue.length;
+export default class FastQueue {
+  newStart: number | undefined = undefined;
+  sPtr = 0;
+  offset: number | undefined = undefined;
+  queue: (Object | undefined)[] = [];
+
+  /**
+   * Queues an element.
+   *
+   * @param {Object} value A value containing a to string method
+   * @return {void}
+   */
+  public enqueue(value: Object): (Object | undefined)[] {
+    if (this.offset) {
+      if (this.offset === this.sPtr) {
+        if (!this.newStart) {
+          this.newStart = this.queue.length;
+        }
+        this.queue.push(value);
+      } else {
+        this.queue[this.offset++] = value;
       }
-      this.queue.push(value);
-    } else {
+    } else if (this.sPtr > 0) {
+      this.offset = 0;
       this.queue[this.offset++] = value;
+    } else {
+      this.queue.push(value);
     }
-  } else if (this.sPtr > 0) {
-    this.offset = 0;
-    this.queue[this.offset++] = value;
-  } else {
-    this.queue.push(value);
+    return this.queue;
   }
-  return this.queue;
-};
-
-FastQueue.prototype.toArray = function (this: Args) {
-  return this.queue;
-};
-
-FastQueue.prototype.toString = function (this: Args) {
-  const output: (Object | undefined)[] = [...this.queue];
-
-  // Colors the cells that have been reused to green.
-  for (let reusedCell = 0; reusedCell < Number(this.offset); reusedCell++) {
-    output[reusedCell] = formatValue(
-      this.queue[reusedCell]?.toString() || "",
-      32
-    );
+  public dequeue() {
+    if (this.sPtr === this.newStart) {
+      if (this.offset) {
+        this.sPtr = 0;
+        this.offset = undefined;
+      } else {
+        this.newStart = undefined;
+      }
+    } else if (this.queue[this.sPtr] === undefined) {
+      if (this.offset) {
+        this.sPtr = 0;
+        this.offset = undefined;
+      } else if (this.newStart) {
+        this.sPtr = this.newStart;
+        this.newStart = undefined;
+      } else {
+        this.queue = [];
+      }
+    }
+    if (this.queue.length) {
+      const dequeued = this.queue[this.sPtr];
+      this.queue[this.sPtr++] = undefined;
+      return dequeued;
+    } else {
+      return undefined;
+    }
   }
-  // Colors the cells that have been added since running out of reusable cells 
-  // to blue.
-  if (this.newStart) {
-    for (
-      let addedCells = this.newStart;
-      addedCells < this.queue.length;
-      addedCells++
-    ) {
-      output[addedCells] = formatValue(
-        this.queue[addedCells]?.toString() || "",
-        34
+
+  public toArray() {
+    return this.queue;
+  }
+
+  public toString() {
+    const output: (Object | undefined)[] = [...this.queue];
+
+    // Colors the cells that have been reused to green.
+    for (let reusedCell = 0; reusedCell < Number(this.offset); reusedCell++) {
+      output[reusedCell] = formatValue(
+        this.queue[reusedCell]?.toString() || "",
+        32
       );
     }
-  }
-  return output.join(" ");
-};
-
-FastQueue.prototype.dequeue = function dequeue(this: Args) {
-  if (this.sPtr === this.newStart) {
-    if (this.offset) {
-      this.sPtr = 0;
-      this.offset = undefined;
-    } else {
-      this.newStart = undefined;
+    // Colors the cells that have been added since running out of reusable cells
+    // to blue.
+    if (this.newStart) {
+      for (
+        let addedCells = this.newStart;
+        addedCells < this.queue.length;
+        addedCells++
+      ) {
+        output[addedCells] = formatValue(
+          this.queue[addedCells]?.toString() || "",
+          34
+        );
+      }
     }
-  } else if (this.queue[this.sPtr] === undefined) {
-    if (this.offset) {
-      this.sPtr = 0;
-      this.offset = undefined;
-    } else if (this.newStart) {
-      this.sPtr = this.newStart;
-      this.newStart = undefined;
-    } else {
-      this.queue = [];
-    }
+    return output.join(" ");
   }
-  if (this.queue.length) {
-    const dequeued = this.queue[this.sPtr];
-    this.queue[this.sPtr++] = undefined;
-    return dequeued;
-  } else {
-    return undefined;
-  }
-};
-
-export default FastQueue;
+}
