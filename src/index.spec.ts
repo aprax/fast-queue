@@ -1,9 +1,7 @@
 import FastQueue from ".";
 
-const queue = Object.create(FastQueue.prototype);
-
 it("should queue three values", () => {
-  FastQueue.apply(queue);
+  const queue = new FastQueue();
   queue.enqueue(1);
   queue.enqueue(2);
   queue.enqueue(3);
@@ -22,7 +20,7 @@ it("should queue three values", () => {
 });
 
 it("should reuse previous cells", () => {
-  FastQueue.apply(queue);
+  const queue = new FastQueue();
 
   queue.enqueue(4);
   queue.enqueue(5);
@@ -105,11 +103,8 @@ it("should reuse previous cells", () => {
 });
 
 describe("when dequeuing an empty queue", () => {
-  beforeEach(() => {
-    FastQueue.apply(queue);
-  });
-
   it("should clear the queue and return undefined", () => {
+    const queue = new FastQueue();
     expect(queue.dequeue()).toBeUndefined();
     queue.enqueue(1);
     expect(queue.dequeue()).toBe(1);
