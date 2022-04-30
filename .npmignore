@@ -1,0 +1,7 @@
+.vscode
+coverage
+src
+.*
+jest.config.ts
+tsconfig.json
+*.log

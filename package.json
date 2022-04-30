@@ -1,11 +1,11 @@
 {
   "name": "@aprax/fast-queue",
-  "version": "1.0.0-0",
+  "version": "1.0.0-1",
   "description": "A queue for Javascript with fast insert at beginning",
   "main": "dist/index.js",
   "scripts": {
     "test": "yarn jest --coverage",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "lint": "yarn prettier --write . && yarn eslint src --fix"
   },
   "repository": {
