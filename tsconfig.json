@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     "target": "es2019",
-    "module": "ES2020",
+    "module": "UMD",
     "rootDir": "./src",
     "moduleResolution": "node",
     "outDir": "./dist",
@@ -19,7 +19,6 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "importsNotUsedAsValues": "error",

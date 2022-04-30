@@ -1,10 +1,3 @@
-/* eslint-disable require-jsdoc */
-export interface Prototype {
-  enqueue: typeof FastQueue.prototype.enqueue;
-  dequeue: typeof FastQueue.prototype.dequeue;
-  toArray: typeof FastQueue.prototype.toArray;
-}
-
 /**
  * Color formats a string.
  *
@@ -24,6 +17,9 @@ const formatValue = (character: string, ansiColorCode?: number): string =>
  *  const myQueue = new FastQueue();
  */
 
+/**
+ * Queue with constant insert and deletion.
+ */
 export default class FastQueue {
   newStart: number | undefined = undefined;
   sPtr = 0;
@@ -33,7 +29,7 @@ export default class FastQueue {
   /**
    * Queues an element.
    *
-   * @param {Object} value A value containing a to string method
+   * @param {object} value A value containing a to string method
    * @return {void}
    */
   public enqueue(value: Object): (Object | undefined)[] {
@@ -54,6 +50,11 @@ export default class FastQueue {
     }
     return this.queue;
   }
+
+  /**
+   *
+   * @return {object | undefined}
+   */
   public dequeue() {
     if (this.sPtr === this.newStart) {
       if (this.offset) {
@@ -82,11 +83,20 @@ export default class FastQueue {
     }
   }
 
-  public toArray() {
+  /**
+   * Returns the current queue.
+   *
+   * @return {(object | undefined)[]}
+   */
+  public toArray(): (object | undefined)[] {
     return this.queue;
   }
 
-  public toString() {
+  /**
+   *
+   * @return {string}
+   */
+  public toString(): string {
     const output: (Object | undefined)[] = [...this.queue];
 
     // Colors the cells that have been reused to green.
