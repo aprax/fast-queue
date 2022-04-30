@@ -1,6 +1,6 @@
 {
   "name": "@aprax/fast-queue",
-  "version": "1.0.0-2",
+  "version": "1.0.0-3",
   "description": "A queue for Javascript with fast insert at beginning",
   "main": "dist/index.js",
   "scripts": {
