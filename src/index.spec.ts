@@ -11,10 +11,10 @@ it("should queue three values", () => {
   expect(queue.dequeue()).toBe(2);
   expect(queue.dequeue()).toBe(3);
 
-  expect(queue.toArray()).toEqual([undefined, undefined, undefined]);
+  expect(queue.toArray()).toEqual([]);
 
   expect(queue.dequeue()).toBeUndefined();
-  expect(queue.toArray()).toHaveLength(0);
+  expect(queue.length).toBe(0);
   expect(queue.dequeue()).toBeUndefined();
   expect(queue.toArray()).toHaveLength(0);
 });
@@ -71,24 +71,17 @@ it("should reuse previous cells", () => {
     11,
   ]);
   expect(queue.dequeue()).toEqual(11);
-  expect(queue.toArray()).toEqual([
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-  ]);
+  expect(queue.toArray()).toEqual([]);
   expect(queue.dequeue()).toBeUndefined();
 
   expect(queue.dequeue()).toBeUndefined();
 
   queue.enqueue(12);
-  expect(queue.toArray()).toHaveLength(1);
+  expect(queue.length).toBe(1);
   queue.enqueue(13);
-  expect(queue.toArray()).toHaveLength(2);
+  expect(queue.length).toBe(2);
   queue.enqueue(14);
-  expect(queue.toArray()).toHaveLength(3);
+  expect(queue.length).toBe(3);
   expect(queue.dequeue()).toBe(12);
 
   queue.enqueue(15);
@@ -102,14 +95,14 @@ it("should reuse previous cells", () => {
   expect(queue.dequeue()).toBeUndefined;
 });
 
-describe("when dequeuing an empty queue", () => {
-  it("should clear the queue and return undefined", () => {
-    const queue = new FastQueue();
-    expect(queue.dequeue()).toBeUndefined();
-    queue.enqueue(1);
-    expect(queue.dequeue()).toBe(1);
-    expect(queue.dequeue()).toBeUndefined();
-    expect(queue.dequeue()).toBeUndefined();
-    expect(queue.toArray()).toHaveLength(0);
-  });
+it("should clear the queue and return undefined", () => {
+  const queue = new FastQueue();
+  expect(queue.dequeue()).toBeUndefined();
+  queue.enqueue(1);
+  expect(queue.dequeue()).toBe(1);
+  expect(queue.length).toBe(0);
+  expect(queue.dequeue()).toBeUndefined();
+  expect(queue.length).toBe(0);
+  expect(queue.dequeue()).toBeUndefined();
+  expect(queue.length).toBe(0);
 });
