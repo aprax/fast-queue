@@ -21,11 +21,17 @@ const formatValue = (character: string, ansiColorCode?: number): string =>
  * Queue with constant insert and deletion.
  */
 export default class FastQueue {
-  newStart: number | undefined = undefined;
-  sPtr = 0;
-  offset: number | undefined = undefined;
+  private newStart: number | undefined = undefined;
+  private sPtr = 0;
+  private offset: number | undefined = undefined;
   queue: (Object | undefined)[] = [];
 
+  /**
+   * Returns the length of the queue
+   */
+  get length() {
+    return this.queue.length;
+  }
   /**
    * Queues an element.
    *
@@ -77,6 +83,10 @@ export default class FastQueue {
     if (this.queue.length) {
       const dequeued = this.queue[this.sPtr];
       this.queue[this.sPtr++] = undefined;
+      if (this.sPtr >= this.queue.length && this.offset === undefined) {
+        this.queue = [];
+        this.sPtr = 0;
+      }
       return dequeued;
     } else {
       return undefined;
