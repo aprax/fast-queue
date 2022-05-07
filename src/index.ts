@@ -21,9 +21,9 @@ const formatValue = (character: string, ansiColorCode?: number): string =>
  * Queue with constant insert and deletion.
  */
 export default class FastQueue {
-  private newStart: number | undefined = undefined;
-  private sPtr = 0;
-  private offset: number | undefined = undefined;
+  private newStartPtr: number | undefined = undefined;
+  private nextDequeuePtr = 0;
+  private reusedPtr: number | undefined = undefined;
   queue: (Object | undefined)[] = [];
 
   /**
@@ -39,18 +39,18 @@ export default class FastQueue {
    * @return {void}
    */
   public enqueue(value: Object): (Object | undefined)[] {
-    if (this.offset) {
-      if (this.offset === this.sPtr) {
-        if (!this.newStart) {
-          this.newStart = this.queue.length;
+    if (this.reusedPtr) {
+      if (this.reusedPtr === this.nextDequeuePtr) {
+        if (!this.newStartPtr) {
+          this.newStartPtr = this.queue.length;
         }
         this.queue.push(value);
       } else {
-        this.queue[this.offset++] = value;
+        this.queue[this.reusedPtr++] = value;
       }
-    } else if (this.sPtr > 0) {
-      this.offset = 0;
-      this.queue[this.offset++] = value;
+    } else if (this.nextDequeuePtr > 0) {
+      this.reusedPtr = 0;
+      this.queue[this.reusedPtr++] = value;
     } else {
       this.queue.push(value);
     }
@@ -62,30 +62,33 @@ export default class FastQueue {
    * @return {object | undefined}
    */
   public dequeue() {
-    if (this.sPtr === this.newStart) {
-      if (this.offset) {
-        this.sPtr = 0;
-        this.offset = undefined;
+    if (this.nextDequeuePtr === this.newStartPtr) {
+      if (this.reusedPtr) {
+        this.nextDequeuePtr = 0;
+        this.reusedPtr = undefined;
       } else {
-        this.newStart = undefined;
+        this.newStartPtr = undefined;
       }
-    } else if (this.queue[this.sPtr] === undefined) {
-      if (this.offset) {
-        this.sPtr = 0;
-        this.offset = undefined;
-      } else if (this.newStart) {
-        this.sPtr = this.newStart;
-        this.newStart = undefined;
+    } else if (this.queue[this.nextDequeuePtr] === undefined) {
+      if (this.reusedPtr) {
+        this.nextDequeuePtr = 0;
+        this.reusedPtr = undefined;
+      } else if (this.newStartPtr) {
+        this.nextDequeuePtr = this.newStartPtr;
+        this.newStartPtr = undefined;
       } else {
         this.queue = [];
       }
     }
     if (this.queue.length) {
-      const dequeued = this.queue[this.sPtr];
-      this.queue[this.sPtr++] = undefined;
-      if (this.sPtr >= this.queue.length && this.offset === undefined) {
+      const dequeued = this.queue[this.nextDequeuePtr];
+      this.queue[this.nextDequeuePtr++] = undefined;
+      if (
+        this.nextDequeuePtr >= this.queue.length &&
+        this.reusedPtr === undefined
+      ) {
         this.queue = [];
-        this.sPtr = 0;
+        this.nextDequeuePtr = 0;
       }
       return dequeued;
     } else {
@@ -110,17 +113,21 @@ export default class FastQueue {
     const output: (Object | undefined)[] = [...this.queue];
 
     // Colors the cells that have been reused to green.
-    for (let reusedCell = 0; reusedCell < Number(this.offset); reusedCell++) {
+    for (
+      let reusedCell = 0;
+      reusedCell < Number(this.reusedPtr);
+      reusedCell++
+    ) {
       output[reusedCell] = formatValue(
         this.queue[reusedCell]?.toString() || "",
         32
       );
     }
     // Colors the cells that have been added since running out of reusable cells
-    // to blue.
-    if (this.newStart) {
+    // to blue. This only applies to dynamically sized queues.
+    if (this.newStartPtr) {
       for (
-        let addedCells = this.newStart;
+        let addedCells = this.newStartPtr;
         addedCells < this.queue.length;
         addedCells++
       ) {
