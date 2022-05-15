@@ -2,3 +2,6 @@ dist
 node_modules
 coverage
 yarn-error.log
+.DS_Store
+src/test_cases
+src/fixed.ts

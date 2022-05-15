@@ -1,22 +1,64 @@
 import FastQueue from ".";
 
-it("should queue three values", () => {
+it("should return all numbers in the same order as pushed", () => {
+  const queue = new FastQueue();
+  let counter = 1;
+  queue.enqueue(1);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueing 1`);
+  queue.enqueue(2);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueing 2`);
+  queue.enqueue(3);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueing 3`);
+
+  expect(queue.dequeue()).toBe(1);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeuing 1`);
+  expect(queue.dequeue()).toBe(2);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeuing 2`);
+
+  queue.enqueue(4);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueuing 4`);
+  expect(queue.front).toBe(3);
+
+  queue.enqueue(5);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueing 5`);
+  expect(queue.front).toBe(3);
+  expect(queue.back).toBe(5);
+  queue.enqueue(6);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after queueing 6`);
+
+  expect(queue.dequeue()).toBe(3);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeueing 3`);
+  expect(queue.dequeue()).toBe(4);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeueing 4`);
+  expect(queue.dequeue()).toBe(5);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeueing 5`);
+  expect(queue.dequeue()).toBe(6);
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeuing 6`);
+  expect(queue.dequeue()).toBeUndefined();
+  expect(queue.toString()).toMatchSnapshot(`${counter++} after empty dequeue `);
+
+  expect(queue.toArray()).toHaveLength(0);
+});
+
+it("should reset when the last item is dequed", () => {
   const queue = new FastQueue();
   queue.enqueue(1);
   queue.enqueue(2);
   queue.enqueue(3);
 
-  expect(queue.toArray()).toEqual([1, 2, 3]);
   expect(queue.dequeue()).toBe(1);
   expect(queue.dequeue()).toBe(2);
+
+  queue.enqueue(4);
+  expect(queue.front).toBe(3);
+  expect(queue.back).toBe(4);
   expect(queue.dequeue()).toBe(3);
+  expect(queue.front).toBe(4);
+  expect(queue.back).toBe(4);
+  expect(queue.dequeue()).toBe(4);
 
-  expect(queue.toArray()).toEqual([]);
-
-  expect(queue.dequeue()).toBeUndefined();
-  expect(queue.length).toBe(0);
-  expect(queue.dequeue()).toBeUndefined();
-  expect(queue.toArray()).toHaveLength(0);
+  expect(queue.front).toBeUndefined();
+  expect(queue.back).toBeUndefined();
 });
 
 it("should reuse previous cells", () => {
@@ -77,11 +119,11 @@ it("should reuse previous cells", () => {
   expect(queue.dequeue()).toBeUndefined();
 
   queue.enqueue(12);
-  expect(queue.length).toBe(1);
+  expect(queue.toArray()).toHaveLength(1);
   queue.enqueue(13);
-  expect(queue.length).toBe(2);
+  expect(queue.toArray()).toHaveLength(2);
   queue.enqueue(14);
-  expect(queue.length).toBe(3);
+  expect(queue.toArray()).toHaveLength(3);
   expect(queue.dequeue()).toBe(12);
 
   queue.enqueue(15);
@@ -95,7 +137,7 @@ it("should reuse previous cells", () => {
   expect(queue.dequeue()).toBeUndefined;
 });
 
-it("should clear the queue and return undefined", () => {
+it("should return undefined when dequeuing an already empty queue", () => {
   const queue = new FastQueue();
   expect(queue.dequeue()).toBeUndefined();
   queue.enqueue(1);
