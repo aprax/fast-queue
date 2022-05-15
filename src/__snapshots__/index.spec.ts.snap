@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should return all numbers in the same order as pushed: 1 after queueing 1 1`] = `"[39;49;4;1m1[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 2 after queueing 2 1`] = `"[39;49;24;1m1[0m [39;49;4;1m2[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 3 after queueing 3 1`] = `"[39;49;24;1m1[0m 2 [39;49;4;1m3[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 4 after dequeuing 1 1`] = `"[37;107;24;22m-[0m [39;49;24;1m2[0m [39;49;4;1m3[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 5 after dequeuing 2 1`] = `"[37;107;24;22m-[0m [37;107;24;22m-[0m [39;49;4;1m3[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 6 after queueuing 4 1`] = `"[32;49;4;22m4[0m [37;107;24;22m-[0m [39;49;4;1m3[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 7 after queueing 5 1`] = `"[32;49;24;22m4[0m [32;49;4;22m5[0m [39;49;24;1m3[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 8 after queueing 6 1`] = `"[32;49;24;22m4[0m [32;49;24;22m5[0m [39;49;24;1m3[0m [94;49;4;22m6[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 9 after dequeueing 3 1`] = `"[39;49;24;1m[32;49;24;22m4[0m[0m [32;49;24;22m5[0m [37;107;24;22m-[0m [94;49;4;22m6[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 10 after dequeueing 4 1`] = `"[32;49;24;22m[0m [39;49;24;1m[32;49;24;22m5[0m[0m [37;107;24;22m-[0m [94;49;4;22m6[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 11 after dequeueing 5 1`] = `"[37;107;24;22m-[0m [37;107;24;22m-[0m [37;107;24;22m-[0m [39;49;4;1m6[0m"`;
+
+exports[`should return all numbers in the same order as pushed: 12 after dequeuing 6 1`] = `""`;
+
+exports[`should return all numbers in the same order as pushed: 13 after empty dequeue  1`] = `""`;
