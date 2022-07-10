@@ -9,8 +9,11 @@
         "--inspect-brk",
         "${workspaceRoot}/node_modules/.bin/jest",
         "--runInBand",
-        "src/index.spec.ts"
+        "src/index.spec.ts",
+        "src/MyCircularQueue.spec.ts",
+        "src/maxLength.spec.ts"
       ],
+      "outputCapture": "std",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
