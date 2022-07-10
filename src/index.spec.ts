@@ -34,20 +34,35 @@ it("should return all numbers in the same order as pushed", () => {
   expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeueing 5`);
   expect(queue.dequeue()).toBe(6);
   expect(queue.toString()).toMatchSnapshot(`${counter++} after dequeuing 6`);
-  expect(queue.dequeue()).toBeUndefined();
+  expect(() => queue.dequeue()).toThrow();
   expect(queue.toString()).toMatchSnapshot(`${counter++} after empty dequeue `);
 
   expect(queue.toArray()).toHaveLength(0);
 });
 
-it("should reset when the last item is dequed", () => {
+it("should reset when the last item is dequeued", () => {
   const queue = new FastQueue();
+  expect(queue.front).toBeUndefined();
+  expect(queue.back).toBeUndefined();
   queue.enqueue(1);
+
+  expect(queue.front).toBe(1);
+  expect(queue.back).toBe(1);
+
   queue.enqueue(2);
+  expect(queue.front).toBe(1);
+  expect(queue.back).toBe(2);
+
   queue.enqueue(3);
+  expect(queue.front).toBe(1);
+  expect(queue.back).toBe(3);
 
   expect(queue.dequeue()).toBe(1);
+  expect(queue.front).toBe(2);
+  expect(queue.back).toBe(3);
   expect(queue.dequeue()).toBe(2);
+  expect(queue.front).toBe(3);
+  expect(queue.back).toBe(3);
 
   queue.enqueue(4);
   expect(queue.front).toBe(3);
@@ -61,7 +76,7 @@ it("should reset when the last item is dequed", () => {
   expect(queue.back).toBeUndefined();
 });
 
-it("should reuse previous cells", () => {
+it.skip("should reuse previous cells", () => {
   const queue = new FastQueue();
 
   queue.enqueue(4);
@@ -137,14 +152,14 @@ it("should reuse previous cells", () => {
   expect(queue.dequeue()).toBeUndefined;
 });
 
-it("should return undefined when dequeuing an already empty queue", () => {
+it("should throw when dequeuing an already empty queue", () => {
   const queue = new FastQueue();
-  expect(queue.dequeue()).toBeUndefined();
+  expect(() => queue.dequeue()).toThrow();
   queue.enqueue(1);
   expect(queue.dequeue()).toBe(1);
   expect(queue.length).toBe(0);
-  expect(queue.dequeue()).toBeUndefined();
+  expect(() => queue.dequeue()).toThrow();
   expect(queue.length).toBe(0);
-  expect(queue.dequeue()).toBeUndefined();
+  expect(() => queue.dequeue()).toThrow();
   expect(queue.length).toBe(0);
 });
